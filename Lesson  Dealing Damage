@@ -1,0 +1,60 @@
+Lesson 
+Dealing Damage
+Bu yazıda karşıdaki düşmanın (aktörün) hasar alma fonksiyonu ve bu fonksiyonu çağırmak üzerine olacak. O zaman başlayalım.
+
+Gun.h:
+
+UPROPERTY(EditAnywhere)
+	float Damage = 10;
+
+Gun.cpp:
+
+Bool bSuccess = GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GmaeTraceChannel1); 
+if (bSuccess)
+{
+   FVector ShotDirection = -Rotation.Vector();
+   UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.Location, ShotDirection.Rotation());
+AActor* HitActor = Hit.GetActor();
+		if (HitActor != nullptr)
+		{
+FPointDamageEvent DamageEvent(Damage, Hit, ShotDirection, nullptr);	
+HitActor->TakeDamage(Damage, DamageEvent, OwnerController, this);
+		}
+	}
+
+}
+}
+Artık karşımıza bir aktör ekleyince ona vurabileceğiz ama elbette hala tam olarak hasar veremiyoruz şuan sadece ona vurabiliyoruz. 
+Artık yavaştan karşımızdaki karaktere hasar vermeye başlayabilir ve bu karakterin canını 0’a indirebiliriz. 
+
+ShooterCharacter.h:
+
+virtual float TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEvent, class AController *EventInstigator, AActor *DamageCauser) override (UClass altındaki 2.public yerine ekliyoruz)
+UPROPERTY(EditDefaultsOnly)
+	float MaxHealth = 100;
+
+	UPROPERTY(VisibleAnywhere)
+	float Health;
+
+
+
+
+ShooterCharacter.cpp:
+
+void AShooterCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	Health = MaxHealth;
+
+
+float AShooterCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEvent, class AController *EventInstigator, AActor *DamageCauser) 
+{
+	float DamageToApply = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	DamageToApply = FMath::Min(Health, DamageToApply);
+	Health -= DamageToApply;
+	UE_LOG(LogTemp, Warning, TEXT("Health left %f"), Health);
+
+Bu kodları da yazıp compile ettiğimiz zaman şunu göreceğiz ki karşımızdaki aktöre vurabiliyor ve log outputlarında canı 100den başlayıp 0’a iniyor. Burada önemli nokta şu can 0’ın altına inmiyor FMath fonksiyonu sayesinde. Ayrıca aktörün canı 0’a inse de karşımızda aynı şekilde durmaya devam ediyor bir sonraki derste bu karaktere animasyonlar ekleyeceğiz ve ölünce o animasyonların devreye girmesini sağlayacağız.
+Ek not: oyuna aktöre eklemek için BP_ShooterCharacter dosyasını oyun alanına sürükleyebilirsiniz.
+
