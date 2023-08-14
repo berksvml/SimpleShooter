@@ -1,0 +1,21 @@
+Lesson 
+Booleanlar ile animasyonları karıştırma
+Bu yazımızda karaktere ölüm animasyonu vereceğiz ama burada önemli olan nokta şu olacak bu karkater sürekli ölüm animasyonunda kalmayacak. Tam olarak canı 0’a inince ölüm animasyonu devreye girecek. Bu yüzden bunu yaparken boolenlar ve fonksiyonlar kullanacağız. O zaman başlayalım.
+İlk olarak daha önceden yaptığımız ABP_Shooter dosyamızı açıyoruz. ABP_Shooter dosyamızın anim grap kısmına ekleme yapmamız lazım. Daha önceden oraya hareket animasyonlarımızı eklemiştik onlar aynı şekilde kalacak. Öncelikle IsDead adında bir boolean oluşturuyoruz variable kısmına. Bildiğiniz gibi result kısmına sadece hareket animasyonlarımız bağlıydı result kısmına artık ölüm animasyonumuzu da bağlayacağımız için buraya şimdi bir Blend Poses by Bool ekliyoruz. Kullanmak istediğimiz ölüm animasyonunu bulup ekliyoruz. Ben Play_Death_Forward animasyonunu beğendim onu kullandım. Şimdi animgraph alanımıza eklemeye başlıyoruz animasyonumuzu oluşturduğumuz boolean’ı. Ardından Blend Poses by Bool’un variable kısmına IsDead booleanımızı bağlıyoruz. Animasyonumuzu true kısmına bağlıyoruz. False kısmına ise BS_Locomotion’ı bağlıyoruz. Blend Poses by Bool’un çıkışını ise Output Pose’a bağlıyoruz. AnimGraph’ın bu ders için son hali bu olmalı.  
+Şimdi bunu artık kodlara dökme ve event graphta da gösterme zamanımız geldi.
+
+ShooterCharacter.h:
+
+public:	
+	UFUNCTION(BlueprintPure)
+	bool IsDead() const; 
+
+ ShooterCharacter.cpp:
+
+bool AShooterCharacter::IsDead() const
+{
+	return Health <= 0;
+
+ 
+Son olarak elde edeceğimiz blueprint şeması bu olmalı.
+Bu şemayı en başta Cast to Shooter Character’ı en sondaki Set kısmına bağlayıp da yapabiliriz fakat ben en başta böyle yapınca her seferinde IsDead fonskiyonunda hata yaşadım ve çözüme ulaşamadım. Bu yüzden fotoğraftaki çözüme gittim zaten derslerin ilerleyen kısmında da bu şekile çevirecek.
