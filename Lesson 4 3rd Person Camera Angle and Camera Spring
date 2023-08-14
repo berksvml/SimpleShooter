@@ -1,0 +1,9 @@
+
+Lesson 4
+3rd Person Camera Angle and Camera Spring
+
+Bu derste kameramızın konumunu ayarlayıp onu stabil bir hale getireceğiz. Bunun için C++ kullanmayacağız oluşturduğumuz “BP_ShooterCharacter” blueprint üzerinden çalışacağız.
+Bu derste uzun uzun anlatmak yerine direkt kamerayı ve ayarları göstereceğim
+ 
+BP_ShooterCharacter Blueprint’i açınca ok işsareti ile gösterdiğim yerden “add” butonuna tıklayarak bir “spring arm” ekliyoruz. Spring arm eklenince camerayı alıp için taşıyoruz böylece kamerayı spring arm’ın çocuğu yapıyoruz. Ardından Spring Arm üzerinden konum ayarını yapıyoruz. Bu konum ayarını kamerayı bulundurmak istediğiniz konuma göre ayarlıyorsunuz. En son Kırmızı kutu ile işsaretlediğim yerden “Use Pawn Controller Rotation” değerini True yapıyoruz (Tick atıyoruz). Böylece kamera ayarımız hazır. 
+Benim kullandığım ayarlarda kamera oyun içinde şu şekilde gözüküyor:  
