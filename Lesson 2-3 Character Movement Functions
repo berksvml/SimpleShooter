@@ -1,0 +1,56 @@
+Lesson 2-3
+Character Movement Functions
+
+Burada artık C++ ile uğraşmaya başlıyoruz. Karakterimize hareket tanımlayacağız bunun için hem Input girişleri yapacağız hem de C++ üzerinden kod yazacağız. O zaman başlayalım
+İlk olarak Visual Studio ekranımıza geliyoruz ve ShooterCharacter.h dosyamızı açıyoruz. Çıkan ekranda bazı temel kodların yazıldığını görüyoruz. Oradan “virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;” 
+kodunu buluyoruz bu kodun altına bazı kodlar eklememiz gerekiyor:
+
+private:
+	void MoveForward(float AxisValue);
+	void MoveRight(float AxisValue);
+	void LookUpRate(float AxisValue);
+	void LookRightRate(float AxisValue);
+UPROPERTY(EditAnywhere)
+	float RotationRate = 10;
+ 
+ShooterCharacter.cpp’de artık gerekli kodları yazabiliriz:
+
+void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &AShooterCharacter::MoveForward);
+	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AShooterCharacter::MoveRight);
+	PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis(TEXT("LookUpRate"), this, &AShooterCharacter::LookUpRate);
+	PlayerInputComponent->BindAxis(TEXT("LookRightRate"), this, &AShooterCharacter::LookRightRate);
+	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+
+
+void AShooterCharacter::MoveForward(float AxisValue) 
+{
+	AddMovementInput(GetActorForwardVector() * AxisValue);
+}
+
+void AShooterCharacter::MoveRight(float AxisValue) 
+{
+	AddMovementInput(GetActorRightVector() * AxisValue);
+}
+
+void AShooterCharacter::LookUpRate(float AxisValue) 
+{
+	AddControllerPitchInput(AxisValue * RotationRate * GetWorld()->GetDeltaSeconds());
+}
+
+void AShooterCharacter::LookRightRate(float AxisValue) 
+{
+	AddControllerYawInput(AxisValue * RotationRate * GetWorld()->GetDeltaSeconds());
+}
+
+Kodları yazınca elde edeceğimiz görüntü şu olacaktır:
+
+Bu kodlar karakterimizin hareket komutları olacak ama bu kadar yeterli değil kodları yazdık ama bunlara birer Input girişi yapmamız lazım. Bunun için tekrar UnrealEngine’ e dönüyoruz ve Input girişlerimizi buradan yapacağız.
+Ek olarak karaktere Input girişi olarak Gamepad girişi de yaptık.  
+
+
