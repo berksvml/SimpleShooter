@@ -1,0 +1,43 @@
+
+Lesson Shot
+
+Bu yazıda anlatacağım konu eklediğimiz silahın ateş etmesi olacak. Silah ateş ederken bir efekt oluştursun ve vurduğu yerde bir efekt oluştursun ki karşı tarafta nereyi vurduğumuzu görelim. O yüzden birden fazla kodu tek seferde birleştirilmiş halde vereceğim.
+
+Gun.cpp:
+
+#include "Kismet/GameplayStatics.h"
+void AGun::PullTrigger() 
+{
+	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, Mesh, TEXT("MuzzleFlashSocket"));
+	
+ Bu kısımda isim olarak yazdığımız MuzzleFlashSocket bizim silahımızda efektin çıkmasını istediğimiz yer. Buranın adı silahın skeletal mesh’i üzerinden bulunabiliyor.
+
+Gun.h: 
+
+public:	
+	// Sets default values for this actor's properties
+	AGun();
+
+	void PullTrigger();
+
+UPROPERTY(EditAnywhere)
+	UParticleSystem *MuzzleFlash;
+
+ShooterCharacter.cpp:
+
+void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	/burada diğer axis ve action kodlarımız zaten vardı üstüne alttaki kodu ekliyoruz.
+
+	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed, this, &AShooterCharacter::Shoot);
+}
+
+void AShooterCharacter::Shoot() 
+{
+	Gun->PullTrigger();
+}
+
+Kodları yazdıktan sonra sırada ateş etmek için bir Input atama zamanı geliyor. Daha önceki derslerde Input ekranını fotoğraf olarak paylaşmıştım orada Ateş etmek için atanmış Input değerlerini görebilirsiniz.
+Kodlar bu şekilde kodları yazdıktan ve compile ettikten sonra Unreal Engine üzerinden düzenlemelerimizi yapacağız. Kodlar compile edilince, BP_Rifle’ı açıyoruz Details kısmında artık bir Gun klasörümüz olacak buradan girdiğimiz zaman Muzzle Flash yazısını göreceğiz. Bu kısım üzerinden artık istediğimiz veya tasarladığımız muzzle flash efektini ekleyebiliriz.
