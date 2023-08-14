@@ -1,0 +1,83 @@
+	Lesson Gun
+Bu derste silahımızı oluşturacağız ona görünüş düzenlemeleri yapacağız ardından karakterimizin eline bağlayacağız ve her karakter doğduğunda elinde başlamasını sağlayacağız. O zaman başlayalım.
+Öncelikle silahımız için bir actor için c++ dosyası oluşturmamız gerekiyor. Ardından bu C++ dosyasını kullanarak bir blueprint oluşturacağız. Bu Blueprint için ben BP_Rifle adını verdim oyunda çünkü rifle kullanacağız. Bunları yaptıktan sonra silahımız için şuan gerekli olan kodları girebiliriz. 
+
+Gun.h için :
+
+private:
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* Root;
+
+	UPROPERTY(VisibleAnywhere)
+	             USkeletalMeshComponent* Mesh;
+
+ Gun.cpp için:
+
+#include "Components/SkeletalMeshComponent.h"
+AGun::AGun()
+{
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	SetRootComponent(Root);
+
+	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
+	Mesh->SetupAttachment(Root);
+
+}
+Bu kodları ekledikten sonra şuanlık kodlarla işimiz bitiyor. Ardından geri Unreal Engine’e dönüyoruz ve BP_Rifle blueprint üzerinden düzenlemeler yapacağız. Kodlar doğru çalışıyorsa göreceğiz ki BP_Rifle içinde mesh dosyası oluşmuş istediğimiz buydu. Şimdi dosya içinden silahımıza asset yükleyeceğiz.  
+Kırmızı kutu içindeki yerden tasarladığımız veya hazır olan bir asset’i seçerek kullanıyoruz.
+
+
+Şimdi silahımızı karakterimizle beraber her seferinde dünyaya ışınlanmasını sağlamamız lazım. Bunun için sadece silahın c++ kodlarına değil karakterimizin de dosyalarına ekleme yapmamız gerekecek.
+
+ShooterCharacter.cpp:
+
+#include "Gun.h"
+void AShooterCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
+
+ShooterCharacter.h:
+
+class AGun;
+UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AGun> GunClass;
+
+	UPROPERTY()
+	AGun* Gun;
+
+Bu kodları ekliyoruz ama bunları hemen eklemek yerine üstüne silahımızı karakterimizin elline bağlayıp bütün kodları tek seferde yapalım.
+Şimdi o zaman silahı karakterimizin eline bağlamadan önce BP_ShooterCharacter içinden gun class olarak BP_rifle belirleyelim.
+Silahımızı karakterimizin eline bağlamak için öncelikle karakterimizin iskelet yapısını açalım. Kullandığımız karakter tasarımında silah olduğu için öncelikle o silahı yok edeceğiz.  
+Skeletal mesh’i açtık ve silahımızın bağlı olduğu kemiği buluyoruz. Ardından bunun altına yeni bir socket ekliyoruz. Socketimize WeaponSocket ismini verdim ben. Sıra şimdi kodlarda. 
+
+ShooterCharacter.cpp:
+
+void AShooterCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	Health = MaxHealth;
+
+	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
+	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
+	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+	Gun->SetOwner(this);
+}
+
+ShooterCharacter.h:
+
+class AGun;
+UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AGun> GunClass;
+
+	UPROPERTY()
+	AGun* Gun;
+Kodlar bu kadar çalıştırınca silah artık karakterimizin eline bağlı olacak ve her spawn olduğunda elinde spawn olacak.
+
+Önemli Not: Eğer silah hala elinde tam spawn olmuyorsa blueprint hatalı olabilir o yüzden silahın blueprintini silip yeniden oluşturmak düzeltiyor.
+
