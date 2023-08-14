@@ -1,0 +1,36 @@
+UNREAL ENGINE 5	
+Lesson 1
+Karakter Oluşturma
+
+1-Unreal Engine 5te tools kısmına geliyoruz.Açılan pencereden new c++ class seçiyoruz
+2-Açılan pencereden karakter seçeneğini seçip next diyoruz. 
+3-Bir sonraki pencereden karakterimize isim veriyoruz ve crate class diyoruz. 
+4-Oluşturduğumuz karakterin kod ekranı karşımıza gelecek
+
+Oluşturulan karakteri content kısmına ekleme.
+
+1-Content Drawer kısmından add tuşuna tıkla 
+2-Açılan pencereden Blueprint Class seçiyoruz 
+3- Blueprint class kısmından all class seçeneğinden adını verdiğimiz karakteri seçiyoruz. Ben “ShooterCharacter” adını verdim.
+4-Oluşturduğumuz Blueprint’e bir isim veriyoruz ben “BP_ShooterCharacter” ismini seçtim. Özellikle isim vermek çok önemli çünkü ileride projede fazlaca Blueprint oluşacağı için karışayacak ve isminden Blueprint’in hangisine ait olduğunu bilebilecek bir isim vermek önemli.
+5-BluePrint’i açınca karşımıza bir kapsül çıkacak bu kapsüle eğer hazırsa karakterimizin tasarımını yükleyebilir ve onun yönünü kapsüle göre ayarlayabiliriz. Fotoğrafta yeşil ok ile gösterilen karakterimizin ön kısmının bakması gereken yer. Yeşil kuru ise karakterimizin skeletal mesh kısmı buradan tasarımımızı seçebiliriz.
+
+Pawn Oluşturma
+
+1-	Pawn oluştururken karakter oluştururken yaptığımız ilk adımı uyguluyoruz.
+2-	Bu sefer Pawn seçip oluşturmaya başlıyoruz.
+3- Bu ekrandan pawn’a isim verebiliriz fakat Pawn ile çok işimiz olmadığı için default olan ismini kullanmayı tercih ettim. Yukarıda kırmızı kutu içerisinde çıkan hata daha önceden aynı projede aynı isimde Pawn oluşturduğum için çıkıyor bu ilk kez oluşturacaklarda çıkmaz. 
+4- pawn için de bir blueprint class oluşturuyorum character oluşturuken kulandığım aynı yöntemleri izliyorum.
+
+Harita
+
+1-Bu projede kullanılan harita dışarıdan alındığı için haritanın ham halini bozmamak için haritayı kopyalayıp başka yerde yeniden isimlendirerek main haritam olarak onu belirliyorum böylece eğer haritada bir bozukluk olursa her zaman orijinal haline bakıp düzeltmeler yapabilirim.  
+ 
+Resimlerde de görüldüğü üzere ben kopyaladığım harita için “SandBox” seçtim. İkinci resimde kopyaladığım haritayı nasıl ana haritam haline getirdiğimi anlattım. Project settings kısmından Maps&mods kısmından yapıyoruz.
+3-	Şimdi sırada oyun modum için bir blueprint oluşturmak var. Bunu oluşturmak önemli çünkü harita içindeki karakterin ve pawnların controller class’ı buradan ayarlanıyor.
+4-Oluşan Bluprint’e “BP_ShooterGameMode” adını verdim.İçini açınca bazı değişiklikleri yapıyoruz. Şuanlık sadece character ve pawn için Blueprintler elimizde olduğu için sadece Deafult Pawn Class’ı oluşturduğumuz karakterin blueprint’i ile değiştiriyoruz. Ben “BP_ShooterCharacter” oluşturduğum için o kısımdan BP_ShooterCharacter seçiyorum.
+5-Son olarak Project Settings kısmından oyun modumuzu oluşturduğumuz oyun modu olarak değiştiriyoruz. Default Game Mode kısmından oluşturduğumuz BP_ShooterGameMode seçiyoruz. 
+ 
+
+
+Önemli NOT!! : Resimlerde verilen isimler ile yazdığım isimler farklı bunun sebebi proje ilerledikçe isimlerde değişimler yapacağız. Tamamen doğru ve kolay anlamak için. 
