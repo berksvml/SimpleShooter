@@ -1,0 +1,37 @@
+Lesson: Animation
+Bu yazıda animasyonları anlatacağız. Animasyonları ekleme karakterimiz için animasyon kümeleri oluşturmayı, animasyon hızlarımızı ayarlamayı ve bunları karakterimize entegre edip oyunumuzun animasyon kısımlarını halletmeyi öğreneceğiz.
+İlk olarak kendimize çalışabileceğimiz bir alan yaratmamız gerekiyor. Bu yüzden animasyonlar için için bir blueprint oluşturacağız. Content Drawerden Add ksımına tıklayıp animation ksımından animation blueprint seçeneğini seçiyoruz.
+ 
+Açılan yeni ekrandan bir iskelet seçmemiz gerekiyor bu animasyonların uygulanacağı iskelet olacağı için karakterimizde kullandığımız skeletal mesh’i seçiyoruz burada da.
+Oluşan yeni dosyaya ABP_ShooterCharacter adını veriyoruz. 
+Bu kısımla şimdilik işimiz bitti karakterimize animasyonlar ayarlayabilmek için farklı bir yere geçiyoruz. Burada kendimize çalışmak için bir blendspace açmamız gerekiyor. Burada dikkat edilecek konu oluşturduğumuz blendspace 2D! Oluşturduğumuz yeni blueprint’e BS_Locomotion adını veriyoruz.
+ 
+
+BS_Locomotion içinden artk animasyonları eklemeye başlayabiliriz. 
+
+Yeşil kutu içine alınan yerden animasyonları arayabiliriz. Kırmızı kutuda olan yere ise animasyonları yerleştiriyoruz. Bu resimde yerleştirdiğimiz animasyonlar karakterin son animasyonları direkt fotoğraftan isimlerini alıp ekleyebilirsiniz.
+Artık bu oluşturduğumuz animasyonu karakterimize bağlayabiliriz. Daha önceden oluşturduğumuz  ABP_ShooterCharacter dosyasına geliyoruz. Animpose kısmına geliyoruz. 
+ 
+Variables kısmından Angle ve speed şeklinde iki tane variable tanımlıyoruz. Ve gördüğümüz şekilde bir animgraph oluşturuyoruz ardından event graphta bazı eklemeler ve düzenlemler yapacağız.
+ 
+Bu şekilde görülenlerden Is valid sequence dışındakileri ekliyoruz. Is Valid ve sequence şu aşamada işimize yaramıyor.
+Oyunu şuan çalıştırınca animasyonları çalışan yürüyebilen bir karakter görmüş olacağız. Ama şuanlık tek yapabildiği bu kadar ile sınırlı.
+ 
+Inverse transform vector eklemek için yukarıdaki blueprinti ekliyorum.
+Bu yazımızın son ve en önemli noktasına geldik animasyonlarımızın hızını ayarlamak. Animasyon hızımızı ayarlamak önemli, eğer animasyon hızlarımızı ayarlamazsak yavaş yürürken bile koşma pozisyonunda olabilir veya ayağı kayıyor biçiminde ilerleyebilir.
+Bunu yapmak için kullandığımız animasyonu açıyoruz, ardından bazı hesapları yapmamız gerekiyor. Bu hesapları kullandığımız animasyona göre örnek olarak anlatacağım.
+Bu hesaplar sonunda footspeed hesaplamış olacağız. Formul şu şekilde: (y_finish – y_start)/(t_finish-t_start)
+t_start,t_finish: ayağın yere değdiği ilk an ve yerden kalktığı an
+y_start, y_finish: ayağın yere değdiğive yerden kesildiği andaki world locationları.
+
+ 
+
+ 
+Bu iki resimde jog_fwd_combat animasyonunun istediğimiz konumları var buna göre:
+t_start: 0.16
+y_start: 17.173357
+t_finish: 0.31
+y_finish: -30.915277
+foot_speed = (-30.915277 - 17.173357)/( 0.31 - 0.16) = -320,5908933
+Bu hesaptan sonra çıkan sonuçtan yola çıkarak -320 sayısını 50ye bölünebilecek şekilde yuvarlıyoruz ben 350ye yuvarladım  geçişler daha smooth olsun diye 300e de yuvarlanabilir. Sonunda 350/50 = 7 elimizde bu değerler varken tekrar BS_Locomotion’a gidiyoruz. Vertical Axis değerlerimizi değiştireceğiz. Maximum axis 350 grid değerimizi 7 yapıyoruz. Böylece bu yazımızın sonuna geliyoruz artık animasyonlarımızı hazırlamayı öğrendik.
+ 
