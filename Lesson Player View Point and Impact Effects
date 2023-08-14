@@ -1,0 +1,53 @@
+Lesson
+Player View Point and Impact Effects
+Bu yazımda oyuncuların öncelikle görüntü alanını, kameranın konumunu ve rotasyonunu alacağız, böylece tetik düğmesine bastığımızda bir hata ayıklama kamerası çizebiliriz. Yani tetiğe bastığımız zaman tam olarak nereye ateş ettiğimizi gösteren bir kamera açısı oluşturacağız. Ardından bunu bir kamera oluşturmak yerine vurduğumuz yeri işaretleyen birer işaretçiye dönüştüreceğiz. En sonda ise bu işaretçilere birer efekt vererek artık tamamen ateş ediyormuş hissiyatı vermiş olacağız. Kamera oluşturmak bizim istediğimiz olay değil o yüzden direkt ateş ettiğimiz yerde oluşturması üzerine çalışacağız. 
+O zaman başlayalım ilk olarak tetik çektiğimiz zaman bir işaretçi oluşsun. Unreal Engine’den projemizi açıyoruz ardından Project Settings kısmına gidip Engine -> Collison başlığına gidiyoruz bir burada bir mermi tanımlayacağız onun çarpışması üzerine değişiklikler yapacağız. Bukket adında bir trace channel tanımladıktan sonra preset kısmına gidip aşağıda verdiğim değişiklikleri yapıyoruz.
+
+Gun.h:
+
+UPROPERTY(EditAnywhere)
+	float MaxRange = 1000;
+
+Gun.cpp:
+
+void AGun::PullTrigger() 
+{
+	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, Mesh, TEXT("MuzzleFlashSocket")); 
+
+APawn* OwnerPawn = Cast<APawn>(GetOwnwer());
+if (OwnerPawn == nullptr) return;
+AController* OwnerController = OwnerPawn->GetController();
+if (OwnerController == nullptr) return;
+
+FVector Location;
+FVector Rotation;
+OwnerController->GetPlayerViewPoint(Location, Rotation);
+
+FVector End = Location + Rotation.Vector() * MaxRange;
+FHitResult Hit;
+Bool bSuccess = GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GmaeTraceChannel1); 
+if (bSuccess)
+{
+   DrawDebugPoint(GetWorld(), Location, 20, FColor::Red, True);
+}
+}
+Bu kodları yazınca bizlere ateş ettiğimiz yerde kırmızı noktalar oluşturacak ama elbette istediğimiz bu değil bu istediğimiz efekti oluşturmak için gerekli olan temellerdi.
+
+Gun.h:
+
+UPROPERTY(EditAnywhere)
+	UParticleSystem *ImpactEffect;
+
+Gun.cpp:
+
+Bool bSuccess = GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GmaeTraceChannel1); 
+if (bSuccess)
+{
+   FVector ShotDirection = -Rotation.Vector();
+   UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.Location, ShotDirection.Rotation());
+}
+}
+
+Kodlarımızı bu şekilde değiştirdikten sonra artık unreal içinden projemizde efekt ekleme zamanı geldi.
+Unreal içinden projemizi açıyoruz ardından Content kısmından BP_Rifle içinden efektimizi ekliyoruz. Böylece projemize girince artık sıktığımız yerde bir çarpışma efekti oluşacak.
+ 
